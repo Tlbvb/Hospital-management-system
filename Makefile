@@ -1,7 +1,7 @@
 postgres:
 	docker run -p 5432:5432 --name hospital-management -e POSTGRES_USER=user1 -e POSTGRES_PASSWORD=test -e POSTGRES_DB=hospital -d postgres
 migrateup:
-	migrate -path db/migration -database "postgresql://user1:test@172.17.0.3:5432/hospital?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://user1:test@localhost/hospital?sslmode=disable" -verbose up
 migratedown:
 	migrate -path db/migration -database "postgresql://user1:test@localhost:5432/hospital?sslmode=disable" -verbose down
 
