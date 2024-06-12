@@ -13,5 +13,8 @@ cleanDatabase:
 
 sqlc:
 	sqlc generate
+
+test: 
+	go test -v
 	
 .PHONY:	postgres	migrateup	migratedown	migrationversion	cleanDatabase	sqlc
