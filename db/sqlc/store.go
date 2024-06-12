@@ -42,6 +42,7 @@ type AppointmentParams struct{
 	Doctor_id int
 	Patient_id int
 	Visitreason string
+	EndTime time.Time
 }
 
 type AppointmentRegResult struct{
@@ -52,11 +53,11 @@ func (store *Store) AppointmentRegistration(arg AppointmentParams) (AppointmentR
 	ctx:=context.Background()
 	var appResult AppointmentRegResult
 	err:=store.execTx(ctx,func(q *Queries) error{
-		appointment,err:=q.CreateAppointment(ctx, CreateAppointmentParams{Time: arg.Time,PatientID:pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true}, DoctorID: pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true}, Visitreason: arg.Visitreason})
+		appointment,err:=q.CreateAppointment(ctx, CreateAppointmentParams{StartTime: arg.Time,EndTime: arg.EndTime,PatientID:pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true}, DoctorID: pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true}, Visitreason: arg.Visitreason})
 		if err!=nil{
 			return err
 		}
-		medRecord,err:=q.CreateMedRecord(ctx, CreateMedRecordParams{PatientID: pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true},DoctorID:  pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true},Diagnosis: pgtype.Text{String: "",Valid: true}, Treatment:pgtype.Text{String: "",Valid: true}, Notes: pgtype.Text{String: "",Valid: true},AppointmentID: pgtype.Int8{Int64: appointment.ID,Valid: true} })
+		medRecord,err:=q.CreateMedRecord(ctx, CreateMedRecordParams{PatientID: pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true},DoctorID:  pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true},Diagnosis: "", Treatment:"", Notes: "",AppointmentID: pgtype.Int8{Int64: appointment.ID,Valid: true} })
 		if err!=nil{
 			return err
 		}
@@ -83,7 +84,7 @@ type UpdateMedResult struct{
 	MedRecMed []MedicalRecordMedication
 }
 
-func (store *Store)UpdateMedRecordAddMedication(arg UpdateMedParams) (UpdateMedResult,err){
+func (store *Store)UpdateMedRecordAddMedication(arg UpdateMedParams) (UpdateMedResult,error){
 	ctx:=context.Background()
 	var MedRes UpdateMedResult
 	err:=store.execTx(ctx,func(queries *Queries)error{
