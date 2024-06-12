@@ -1,7 +1,7 @@
 CREATE TABLE "Appointment" (
   "id" bigserial PRIMARY KEY,
-  "start_time" timestamptz NOT NULL,
-  "end_time"  timestamptz NOT NULL,
+  "start_time" timestamptz NOT NULL UNIQUE,
+  "end_time"  timestamptz NOT NULL UNIQUE,
   "patient_id" bigint,
   "doctor_id" bigint,
   "visitreason" varchar NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE "MedicalRecord" (
 
 CREATE TABLE "Medication" (
   "id" bigserial PRIMARY KEY,
-  "medicationame" varchar,
+  "medicationame" varchar UNIQUE,
   "description" varchar NOT NULL,
   "sideeffects" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
