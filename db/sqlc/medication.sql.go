@@ -22,8 +22,8 @@ RETURNING id, medicationame, description, sideeffects, created_at
 
 type CreateMedicationParams struct {
 	Medicationame pgtype.Text `json:"medicationame"`
-	Description   pgtype.Text `json:"description"`
-	Sideeffects   pgtype.Text `json:"sideeffects"`
+	Description   string      `json:"description"`
+	Sideeffects   string      `json:"sideeffects"`
 }
 
 func (q *Queries) CreateMedication(ctx context.Context, arg CreateMedicationParams) (Medication, error) {

@@ -24,3 +24,9 @@ appointment_id, diagnosis, treatment,notes,patient_id,doctor_id
 )
 RETURNING *;
 
+-- name: UpdateMedicalRecord :exec
+UPDATE "MedicalRecord"
+  set diagnosis = $2,treatment=$3, notes=$4
+WHERE id = $1;
+
+

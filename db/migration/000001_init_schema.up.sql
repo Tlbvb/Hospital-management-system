@@ -14,17 +14,17 @@ CREATE TABLE "MedicalRecord" (
   "appointment_id" bigint,
   "patient_id" bigint,
   "doctor_id" bigint,
-  "diagnosis" varchar,
-  "treatment" varchar,
-  "notes" varchar,
+  "diagnosis" varchar NOT NULL,
+  "treatment" varchar NOT NULL,
+  "notes" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "Medication" (
   "id" bigserial PRIMARY KEY,
   "medicationame" varchar,
-  "description" varchar,
-  "sideeffects" varchar,
+  "description" varchar NOT NULL,
+  "sideeffects" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
@@ -37,29 +37,29 @@ CREATE TABLE "MedicalRecordMedication" (
 
 CREATE TABLE "Doctor" (
   "id" bigserial PRIMARY KEY,
-  "fullname" varchar,
-  "specialty" varchar,
+  "fullname" varchar NOT NULL,
+  "specialty" varchar NOT NULL,
   "department_id" bigint,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "Patient" (
   "id" bigserial PRIMARY KEY,
-  "fullname" varchar,
-  "address" varchar,
+  "fullname" varchar NOT NULL,
+  "address" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "Admin" (
   "id" bigserial PRIMARY KEY,
-  "fullname" varchar,
+  "fullname" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "Department" (
   "id" bigserial PRIMARY KEY,
-  "name" varchar,
-  "description" varchar,
+  "name" varchar NOT NULL,
+  "description" varchar NOT NULL,
   "head_id" bigint UNIQUE,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );

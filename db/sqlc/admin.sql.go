@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createAdmin = `-- name: CreateAdmin :one
@@ -20,7 +18,7 @@ fullname
 RETURNING id, fullname, created_at
 `
 
-func (q *Queries) CreateAdmin(ctx context.Context, fullname pgtype.Text) (Admin, error) {
+func (q *Queries) CreateAdmin(ctx context.Context, fullname string) (Admin, error) {
 	row := q.db.QueryRow(ctx, createAdmin, fullname)
 	var i Admin
 	err := row.Scan(&i.ID, &i.Fullname, &i.CreatedAt)
@@ -44,7 +42,7 @@ SELECT id, fullname, created_at FROM "Admin"
 WHERE fullname = $1 LIMIT 1
 `
 
-func (q *Queries) GetAdminByName(ctx context.Context, fullname pgtype.Text) (Admin, error) {
+func (q *Queries) GetAdminByName(ctx context.Context, fullname string) (Admin, error) {
 	row := q.db.QueryRow(ctx, getAdminByName, fullname)
 	var i Admin
 	err := row.Scan(&i.ID, &i.Fullname, &i.CreatedAt)

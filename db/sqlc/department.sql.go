@@ -21,8 +21,8 @@ RETURNING id, name, description, head_id, created_at
 `
 
 type CreateDepartmentParams struct {
-	Name        pgtype.Text `json:"name"`
-	Description pgtype.Text `json:"description"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
 	HeadID      pgtype.Int8 `json:"head_id"`
 }
 
@@ -80,7 +80,7 @@ SELECT id, name, description, head_id, created_at FROM "Department"
 WHERE name = $1 LIMIT 1
 `
 
-func (q *Queries) GetDepartmentByName(ctx context.Context, name pgtype.Text) (Department, error) {
+func (q *Queries) GetDepartmentByName(ctx context.Context, name string) (Department, error) {
 	row := q.db.QueryRow(ctx, getDepartmentByName, name)
 	var i Department
 	err := row.Scan(
@@ -98,7 +98,7 @@ SELECT head_id FROM "Department"
 WHERE name = $1 LIMIT 1
 `
 
-func (q *Queries) GetDepartmentHeadId(ctx context.Context, name pgtype.Text) (pgtype.Int8, error) {
+func (q *Queries) GetDepartmentHeadId(ctx context.Context, name string) (pgtype.Int8, error) {
 	row := q.db.QueryRow(ctx, getDepartmentHeadId, name)
 	var head_id pgtype.Int8
 	err := row.Scan(&head_id)

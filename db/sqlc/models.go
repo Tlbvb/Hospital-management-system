@@ -11,14 +11,15 @@ import (
 )
 
 type Admin struct {
-	ID        int64       `json:"id"`
-	Fullname  pgtype.Text `json:"fullname"`
-	CreatedAt time.Time   `json:"created_at"`
+	ID        int64     `json:"id"`
+	Fullname  string    `json:"fullname"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type Appointment struct {
 	ID          int64       `json:"id"`
-	Time        time.Time   `json:"time"`
+	StartTime   time.Time   `json:"start_time"`
+	EndTime     time.Time   `json:"end_time"`
 	PatientID   pgtype.Int8 `json:"patient_id"`
 	DoctorID    pgtype.Int8 `json:"doctor_id"`
 	Visitreason string      `json:"visitreason"`
@@ -28,16 +29,16 @@ type Appointment struct {
 
 type Department struct {
 	ID          int64       `json:"id"`
-	Name        pgtype.Text `json:"name"`
-	Description pgtype.Text `json:"description"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
 	HeadID      pgtype.Int8 `json:"head_id"`
 	CreatedAt   time.Time   `json:"created_at"`
 }
 
 type Doctor struct {
 	ID           int64       `json:"id"`
-	Fullname     pgtype.Text `json:"fullname"`
-	Specialty    pgtype.Text `json:"specialty"`
+	Fullname     string      `json:"fullname"`
+	Specialty    string      `json:"specialty"`
 	DepartmentID pgtype.Int8 `json:"department_id"`
 	CreatedAt    time.Time   `json:"created_at"`
 }
@@ -47,9 +48,9 @@ type MedicalRecord struct {
 	AppointmentID pgtype.Int8 `json:"appointment_id"`
 	PatientID     pgtype.Int8 `json:"patient_id"`
 	DoctorID      pgtype.Int8 `json:"doctor_id"`
-	Diagnosis     pgtype.Text `json:"diagnosis"`
-	Treatment     pgtype.Text `json:"treatment"`
-	Notes         pgtype.Text `json:"notes"`
+	Diagnosis     string      `json:"diagnosis"`
+	Treatment     string      `json:"treatment"`
+	Notes         string      `json:"notes"`
 	CreatedAt     time.Time   `json:"created_at"`
 }
 
@@ -63,14 +64,14 @@ type MedicalRecordMedication struct {
 type Medication struct {
 	ID            int64       `json:"id"`
 	Medicationame pgtype.Text `json:"medicationame"`
-	Description   pgtype.Text `json:"description"`
-	Sideeffects   pgtype.Text `json:"sideeffects"`
+	Description   string      `json:"description"`
+	Sideeffects   string      `json:"sideeffects"`
 	CreatedAt     time.Time   `json:"created_at"`
 }
 
 type Patient struct {
-	ID        int64       `json:"id"`
-	Fullname  pgtype.Text `json:"fullname"`
-	Address   pgtype.Text `json:"address"`
-	CreatedAt time.Time   `json:"created_at"`
+	ID        int64     `json:"id"`
+	Fullname  string    `json:"fullname"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
 }

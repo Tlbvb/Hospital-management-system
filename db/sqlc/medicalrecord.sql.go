@@ -22,9 +22,9 @@ RETURNING id, appointment_id, patient_id, doctor_id, diagnosis, treatment, notes
 
 type CreateMedRecordParams struct {
 	AppointmentID pgtype.Int8 `json:"appointment_id"`
-	Diagnosis     pgtype.Text `json:"diagnosis"`
-	Treatment     pgtype.Text `json:"treatment"`
-	Notes         pgtype.Text `json:"notes"`
+	Diagnosis     string      `json:"diagnosis"`
+	Treatment     string      `json:"treatment"`
+	Notes         string      `json:"notes"`
 	PatientID     pgtype.Int8 `json:"patient_id"`
 	DoctorID      pgtype.Int8 `json:"doctor_id"`
 }
@@ -160,4 +160,27 @@ func (q *Queries) GetMedicalRecordsPatient(ctx context.Context, patientID pgtype
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateMedicalRecord = `-- name: UpdateMedicalRecord :exec
+UPDATE "MedicalRecord"
+  set diagnosis = $2,treatment=$3, notes=$4
+WHERE id = $1
+`
+
+type UpdateMedicalRecordParams struct {
+	ID        int64  `json:"id"`
+	Diagnosis string `json:"diagnosis"`
+	Treatment string `json:"treatment"`
+	Notes     string `json:"notes"`
+}
+
+func (q *Queries) UpdateMedicalRecord(ctx context.Context, arg UpdateMedicalRecordParams) error {
+	_, err := q.db.Exec(ctx, updateMedicalRecord,
+		arg.ID,
+		arg.Diagnosis,
+		arg.Treatment,
+		arg.Notes,
+	)
+	return err
 }

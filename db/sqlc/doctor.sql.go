@@ -21,8 +21,8 @@ RETURNING id, fullname, specialty, department_id, created_at
 `
 
 type CreateDoctorParams struct {
-	Fullname     pgtype.Text `json:"fullname"`
-	Specialty    pgtype.Text `json:"specialty"`
+	Fullname     string      `json:"fullname"`
+	Specialty    string      `json:"specialty"`
 	DepartmentID pgtype.Int8 `json:"department_id"`
 }
 
@@ -62,7 +62,7 @@ SELECT id, fullname, specialty, department_id, created_at FROM "Doctor"
 WHERE fullname = $1 LIMIT 1
 `
 
-func (q *Queries) GetDoctorByName(ctx context.Context, fullname pgtype.Text) (Doctor, error) {
+func (q *Queries) GetDoctorByName(ctx context.Context, fullname string) (Doctor, error) {
 	row := q.db.QueryRow(ctx, getDoctorByName, fullname)
 	var i Doctor
 	err := row.Scan(

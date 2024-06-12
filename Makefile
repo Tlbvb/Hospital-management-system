@@ -11,6 +11,7 @@ migrationversion:
 cleanDatabase: 
 	migrate -path db/migration -database "postgresql://user1:test@localhost:5432/hospital?sslmode=disable" drop
 
-
+sqlc:
+	sqlc generate
 	
-.PHONY:	postgres	migrateup	migratedown	migrationversion	cleanDatabase
+.PHONY:	postgres	migrateup	migratedown	migrationversion	cleanDatabase	sqlc

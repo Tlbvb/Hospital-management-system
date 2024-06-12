@@ -14,31 +14,36 @@ import (
 
 const createAppointment = `-- name: CreateAppointment :one
 INSERT INTO "Appointment" (
-time, patient_id,doctor_id, visitreason,status
+start_time,end_time, patient_id,doctor_id, visitreason,status
 ) VALUES (
-  $1, $2,$3,$4,&5
+  $1, $2,$3,$4,$5,$6
 )
-RETURNING id, time, patient_id, doctor_id, visitreason, status, created_at
+RETURNING id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at
 `
 
 type CreateAppointmentParams struct {
-	Time        time.Time   `json:"time"`
+	StartTime   time.Time   `json:"start_time"`
+	EndTime     time.Time   `json:"end_time"`
 	PatientID   pgtype.Int8 `json:"patient_id"`
 	DoctorID    pgtype.Int8 `json:"doctor_id"`
 	Visitreason string      `json:"visitreason"`
+	Status      string      `json:"status"`
 }
 
 func (q *Queries) CreateAppointment(ctx context.Context, arg CreateAppointmentParams) (Appointment, error) {
 	row := q.db.QueryRow(ctx, createAppointment,
-		arg.Time,
+		arg.StartTime,
+		arg.EndTime,
 		arg.PatientID,
 		arg.DoctorID,
 		arg.Visitreason,
+		arg.Status,
 	)
 	var i Appointment
 	err := row.Scan(
 		&i.ID,
-		&i.Time,
+		&i.StartTime,
+		&i.EndTime,
 		&i.PatientID,
 		&i.DoctorID,
 		&i.Visitreason,
@@ -49,7 +54,7 @@ func (q *Queries) CreateAppointment(ctx context.Context, arg CreateAppointmentPa
 }
 
 const getAppointment = `-- name: GetAppointment :one
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
 WHERE id = $1 LIMIT 1
 `
 
@@ -58,7 +63,8 @@ func (q *Queries) GetAppointment(ctx context.Context, id int64) (Appointment, er
 	var i Appointment
 	err := row.Scan(
 		&i.ID,
-		&i.Time,
+		&i.StartTime,
+		&i.EndTime,
 		&i.PatientID,
 		&i.DoctorID,
 		&i.Visitreason,
@@ -69,8 +75,8 @@ func (q *Queries) GetAppointment(ctx context.Context, id int64) (Appointment, er
 }
 
 const listAppointmentsDoctor = `-- name: ListAppointmentsDoctor :many
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
-WHERE doctor_id = $1 order by time
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+WHERE doctor_id = $1 order by start_time
 `
 
 func (q *Queries) ListAppointmentsDoctor(ctx context.Context, doctorID pgtype.Int8) ([]Appointment, error) {
@@ -84,7 +90,8 @@ func (q *Queries) ListAppointmentsDoctor(ctx context.Context, doctorID pgtype.In
 		var i Appointment
 		if err := rows.Scan(
 			&i.ID,
-			&i.Time,
+			&i.StartTime,
+			&i.EndTime,
 			&i.PatientID,
 			&i.DoctorID,
 			&i.Visitreason,
@@ -102,8 +109,8 @@ func (q *Queries) ListAppointmentsDoctor(ctx context.Context, doctorID pgtype.In
 }
 
 const listAppointmentsDoctorStatus = `-- name: ListAppointmentsDoctorStatus :many
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
-WHERE doctor_id = $1 AND status=$2 order by time
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+WHERE doctor_id = $1 AND status=$2 order by start_time
 `
 
 type ListAppointmentsDoctorStatusParams struct {
@@ -122,7 +129,8 @@ func (q *Queries) ListAppointmentsDoctorStatus(ctx context.Context, arg ListAppo
 		var i Appointment
 		if err := rows.Scan(
 			&i.ID,
-			&i.Time,
+			&i.StartTime,
+			&i.EndTime,
 			&i.PatientID,
 			&i.DoctorID,
 			&i.Visitreason,
@@ -140,8 +148,8 @@ func (q *Queries) ListAppointmentsDoctorStatus(ctx context.Context, arg ListAppo
 }
 
 const listAppointmentsPatient = `-- name: ListAppointmentsPatient :many
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
-WHERE patient_id = $1 ORDER BY time
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+WHERE patient_id = $1 ORDER BY start_time
 `
 
 func (q *Queries) ListAppointmentsPatient(ctx context.Context, patientID pgtype.Int8) ([]Appointment, error) {
@@ -155,7 +163,8 @@ func (q *Queries) ListAppointmentsPatient(ctx context.Context, patientID pgtype.
 		var i Appointment
 		if err := rows.Scan(
 			&i.ID,
-			&i.Time,
+			&i.StartTime,
+			&i.EndTime,
 			&i.PatientID,
 			&i.DoctorID,
 			&i.Visitreason,
@@ -173,8 +182,8 @@ func (q *Queries) ListAppointmentsPatient(ctx context.Context, patientID pgtype.
 }
 
 const listAppointmentsPatientDoctorStatus = `-- name: ListAppointmentsPatientDoctorStatus :many
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
-WHERE doctor_id = $1 AND status=$2 AND patient_id=$3 order by time
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+WHERE doctor_id = $1 AND status=$2 AND patient_id=$3 order by start_time
 `
 
 type ListAppointmentsPatientDoctorStatusParams struct {
@@ -194,7 +203,8 @@ func (q *Queries) ListAppointmentsPatientDoctorStatus(ctx context.Context, arg L
 		var i Appointment
 		if err := rows.Scan(
 			&i.ID,
-			&i.Time,
+			&i.StartTime,
+			&i.EndTime,
 			&i.PatientID,
 			&i.DoctorID,
 			&i.Visitreason,
@@ -212,8 +222,8 @@ func (q *Queries) ListAppointmentsPatientDoctorStatus(ctx context.Context, arg L
 }
 
 const listAppointmentsPatientStatus = `-- name: ListAppointmentsPatientStatus :many
-SELECT id, time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
-WHERE patient_id = $1 AND status=$2 order by time
+SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, created_at FROM "Appointment"
+WHERE patient_id = $1 AND status=$2 order by start_time
 `
 
 type ListAppointmentsPatientStatusParams struct {
@@ -232,7 +242,8 @@ func (q *Queries) ListAppointmentsPatientStatus(ctx context.Context, arg ListApp
 		var i Appointment
 		if err := rows.Scan(
 			&i.ID,
-			&i.Time,
+			&i.StartTime,
+			&i.EndTime,
 			&i.PatientID,
 			&i.DoctorID,
 			&i.Visitreason,
