@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
@@ -19,10 +21,10 @@ type Querier interface {
 	GetAdminById(ctx context.Context, id int64) (Admin, error)
 	GetAdminByName(ctx context.Context, fullname string) (Admin, error)
 	GetAppointment(ctx context.Context, id int64) (Appointment, error)
-	GetDepartmentByHead(ctx context.Context, headID int64) (Department, error)
+	GetDepartmentByHead(ctx context.Context, headID pgtype.Int8) (Department, error)
 	GetDepartmentById(ctx context.Context, id int64) (Department, error)
 	GetDepartmentByName(ctx context.Context, name string) (Department, error)
-	GetDepartmentHeadId(ctx context.Context, name string) (int64, error)
+	GetDepartmentHeadId(ctx context.Context, name string) (pgtype.Int8, error)
 	GetDoctorById(ctx context.Context, id int64) (Doctor, error)
 	GetDoctorByName(ctx context.Context, fullname string) (Doctor, error)
 	GetDoctorsOfDepartment(ctx context.Context, departmentID int64) ([]Doctor, error)

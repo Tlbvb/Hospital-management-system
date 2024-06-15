@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	"github.com/tlbvb/hospital-management/util"
 )
@@ -34,9 +35,9 @@ func TestGetDepartmentHeadId(t *testing.T) {
 
 func TestGetDepartmentByHead(t *testing.T) {
 	headID:=util.RandomInt(1,10)
-	department, err := TestQueries.GetDepartmentByHead(context.Background(), int64(headID))
+	department, err := TestQueries.GetDepartmentByHead(context.Background(), pgtype.Int8{Int64: headID,Valid: true})
 	require.NoError(t, err)
 	require.NotEmpty(t, department)
-	require.Equal(t, headID, department.HeadID)
+	require.Equal(t, headID, department.HeadID.Int64)
 	//require.Equal(t, "Orthopedics", department.Name)
 }

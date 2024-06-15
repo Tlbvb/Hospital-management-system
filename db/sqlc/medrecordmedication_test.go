@@ -27,10 +27,7 @@ func TestCreateMedRecMedic(t *testing.T) {
 }
 
 func TestGetMedicationByRecord(t *testing.T) {
-
-
 	createdMedRecMedic := createTestMedRecMedic(t)
-
 	// Fetch the medication by medical record ID
 	medRecMedications, err := TestQueries.GetMedicationByRecord(context.Background(), createdMedRecMedic.MedicalRecordID)
 	require.NoError(t, err)

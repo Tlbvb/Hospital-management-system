@@ -60,7 +60,7 @@ CREATE TABLE "Department" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "description" varchar NOT NULL,
-  "head_id" bigint NOT NULL,
+  "head_id" bigint ,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 

@@ -6,6 +6,8 @@ package db
 
 import (
 	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Admin struct {
@@ -26,11 +28,11 @@ type Appointment struct {
 }
 
 type Department struct {
-	ID          int64     `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	HeadID      int64     `json:"head_id"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID          int64       `json:"id"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	HeadID      pgtype.Int8 `json:"head_id"`
+	CreatedAt   time.Time   `json:"created_at"`
 }
 
 type Doctor struct {

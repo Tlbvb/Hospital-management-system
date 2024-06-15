@@ -31,7 +31,7 @@ var departments = [10]string{
 	"Orthopedics",
 	"Radiology",
 	"Oncology",
-	"General Surgery",
+	"Surgery",
 }
 
 
@@ -72,7 +72,7 @@ func RandomSpecialization() string{
 }
 
 func RandomDep()string{
-	return departments[RandomInt(1,10)]
+	return departments[RandomInt(0,9)]
 }
 
 func RandomTime() time.Time{
