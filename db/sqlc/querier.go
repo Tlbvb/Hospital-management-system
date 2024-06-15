@@ -6,14 +6,11 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	CreateAdmin(ctx context.Context, fullname string) (Admin, error)
 	CreateAppointment(ctx context.Context, arg CreateAppointmentParams) (Appointment, error)
-	CreateDepartment(ctx context.Context, arg CreateDepartmentParams) (Department, error)
 	CreateDoctor(ctx context.Context, arg CreateDoctorParams) (Doctor, error)
 	CreateMedRecMedic(ctx context.Context, arg CreateMedRecMedicParams) (MedicalRecordMedication, error)
 	CreateMedRecord(ctx context.Context, arg CreateMedRecordParams) (MedicalRecord, error)
@@ -22,25 +19,25 @@ type Querier interface {
 	GetAdminById(ctx context.Context, id int64) (Admin, error)
 	GetAdminByName(ctx context.Context, fullname string) (Admin, error)
 	GetAppointment(ctx context.Context, id int64) (Appointment, error)
-	GetDepartmentByHead(ctx context.Context, headID pgtype.Int8) (Department, error)
+	GetDepartmentByHead(ctx context.Context, headID int64) (Department, error)
 	GetDepartmentById(ctx context.Context, id int64) (Department, error)
 	GetDepartmentByName(ctx context.Context, name string) (Department, error)
-	GetDepartmentHeadId(ctx context.Context, name string) (pgtype.Int8, error)
+	GetDepartmentHeadId(ctx context.Context, name string) (int64, error)
 	GetDoctorById(ctx context.Context, id int64) (Doctor, error)
 	GetDoctorByName(ctx context.Context, fullname string) (Doctor, error)
-	GetDoctorsOfDepartment(ctx context.Context, departmentID pgtype.Int8) ([]Doctor, error)
+	GetDoctorsOfDepartment(ctx context.Context, departmentID int64) ([]Doctor, error)
 	GetMedicalRecord(ctx context.Context, id int64) (MedicalRecord, error)
-	GetMedicalRecordAppointment(ctx context.Context, appointmentID pgtype.Int8) (MedicalRecord, error)
-	GetMedicalRecordsDoctor(ctx context.Context, doctorID pgtype.Int8) ([]MedicalRecord, error)
-	GetMedicalRecordsPatient(ctx context.Context, patientID pgtype.Int8) ([]MedicalRecord, error)
+	GetMedicalRecordAppointment(ctx context.Context, appointmentID int64) (MedicalRecord, error)
+	GetMedicalRecordsDoctor(ctx context.Context, doctorID int64) ([]MedicalRecord, error)
+	GetMedicalRecordsPatient(ctx context.Context, patientID int64) ([]MedicalRecord, error)
 	GetMedication(ctx context.Context, id int64) (Medication, error)
-	GetMedicationByName(ctx context.Context, medicationame pgtype.Text) (Medication, error)
-	GetMedicationByRecord(ctx context.Context, medicalRecordID pgtype.Int8) ([]MedicalRecordMedication, error)
+	GetMedicationByName(ctx context.Context, medicationame string) (Medication, error)
+	GetMedicationByRecord(ctx context.Context, medicalRecordID int64) ([]MedicalRecordMedication, error)
 	GetPatientById(ctx context.Context, id int64) (Patient, error)
 	GetPatientByName(ctx context.Context, fullname string) (Patient, error)
-	ListAppointmentsDoctor(ctx context.Context, doctorID pgtype.Int8) ([]Appointment, error)
+	ListAppointmentsDoctor(ctx context.Context, doctorID int64) ([]Appointment, error)
 	ListAppointmentsDoctorStatus(ctx context.Context, arg ListAppointmentsDoctorStatusParams) ([]Appointment, error)
-	ListAppointmentsPatient(ctx context.Context, patientID pgtype.Int8) ([]Appointment, error)
+	ListAppointmentsPatient(ctx context.Context, patientID int64) ([]Appointment, error)
 	ListAppointmentsPatientDoctorStatus(ctx context.Context, arg ListAppointmentsPatientDoctorStatusParams) ([]Appointment, error)
 	ListAppointmentsPatientStatus(ctx context.Context, arg ListAppointmentsPatientStatusParams) ([]Appointment, error)
 	UpdateAppointmentStatus(ctx context.Context, arg UpdateAppointmentStatusParams) error

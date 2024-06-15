@@ -6,18 +6,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/tlbvb/hospital-management/util"
 )
 
 func CreateTestPatient(t *testing.T) Patient {
 	params := CreatePatientParams{
-		Fullname: "PatientUser",
-		Address:  "123 Main St",
+		Fullname: util.RandomFullName(),
+		Address:  util.RandomAddress(),
 	}
 	patient, err := TestQueries.CreatePatient(context.Background(), params)
 	require.NoError(t, err)
 	require.NotEmpty(t, patient)
-	require.Equal(t, "PatientUser", patient.Fullname)
-	require.Equal(t, "123 Main St", patient.Address)
+	require.Equal(t, params.Fullname, patient.Fullname)
+	require.Equal(t, params.Address, patient.Address)
 	return patient
 }
 
@@ -40,7 +41,7 @@ func TestGetPatientById(t *testing.T) {
 func TestGetPatientByName(t *testing.T) {
 	createdPatient := CreateTestPatient(t)
 	fmt.Println(createdPatient)
-	patient, err := TestQueries.GetPatientByName(context.Background(), "PatientUser")
+	patient, err := TestQueries.GetPatientByName(context.Background(), createdPatient.Fullname)
 	fmt.Println(patient, createdPatient)
 	require.NoError(t, err)
 	require.NotEmpty(t, patient)

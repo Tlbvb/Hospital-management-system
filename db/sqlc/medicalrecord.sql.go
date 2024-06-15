@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createMedRecord = `-- name: CreateMedRecord :one
@@ -21,12 +19,12 @@ RETURNING id, appointment_id, patient_id, doctor_id, diagnosis, treatment, notes
 `
 
 type CreateMedRecordParams struct {
-	AppointmentID pgtype.Int8 `json:"appointment_id"`
-	Diagnosis     string      `json:"diagnosis"`
-	Treatment     string      `json:"treatment"`
-	Notes         string      `json:"notes"`
-	PatientID     pgtype.Int8 `json:"patient_id"`
-	DoctorID      pgtype.Int8 `json:"doctor_id"`
+	AppointmentID int64  `json:"appointment_id"`
+	Diagnosis     string `json:"diagnosis"`
+	Treatment     string `json:"treatment"`
+	Notes         string `json:"notes"`
+	PatientID     int64  `json:"patient_id"`
+	DoctorID      int64  `json:"doctor_id"`
 }
 
 func (q *Queries) CreateMedRecord(ctx context.Context, arg CreateMedRecordParams) (MedicalRecord, error) {
@@ -78,7 +76,7 @@ SELECT id, appointment_id, patient_id, doctor_id, diagnosis, treatment, notes, c
 WHERE appointment_id = $1 LIMIT 1
 `
 
-func (q *Queries) GetMedicalRecordAppointment(ctx context.Context, appointmentID pgtype.Int8) (MedicalRecord, error) {
+func (q *Queries) GetMedicalRecordAppointment(ctx context.Context, appointmentID int64) (MedicalRecord, error) {
 	row := q.db.QueryRow(ctx, getMedicalRecordAppointment, appointmentID)
 	var i MedicalRecord
 	err := row.Scan(
@@ -99,7 +97,7 @@ SELECT id, appointment_id, patient_id, doctor_id, diagnosis, treatment, notes, c
 WHERE doctor_id = $1
 `
 
-func (q *Queries) GetMedicalRecordsDoctor(ctx context.Context, doctorID pgtype.Int8) ([]MedicalRecord, error) {
+func (q *Queries) GetMedicalRecordsDoctor(ctx context.Context, doctorID int64) ([]MedicalRecord, error) {
 	rows, err := q.db.Query(ctx, getMedicalRecordsDoctor, doctorID)
 	if err != nil {
 		return nil, err
@@ -133,7 +131,7 @@ SELECT id, appointment_id, patient_id, doctor_id, diagnosis, treatment, notes, c
 WHERE patient_id = $1
 `
 
-func (q *Queries) GetMedicalRecordsPatient(ctx context.Context, patientID pgtype.Int8) ([]MedicalRecord, error) {
+func (q *Queries) GetMedicalRecordsPatient(ctx context.Context, patientID int64) ([]MedicalRecord, error) {
 	rows, err := q.db.Query(ctx, getMedicalRecordsPatient, patientID)
 	if err != nil {
 		return nil, err

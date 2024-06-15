@@ -8,8 +8,6 @@ package db
 import (
 	"context"
 	"time"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createAppointment = `-- name: CreateAppointment :one
@@ -22,12 +20,12 @@ RETURNING id, start_time, end_time, patient_id, doctor_id, visitreason, status, 
 `
 
 type CreateAppointmentParams struct {
-	StartTime   time.Time   `json:"start_time"`
-	EndTime     time.Time   `json:"end_time"`
-	PatientID   pgtype.Int8 `json:"patient_id"`
-	DoctorID    pgtype.Int8 `json:"doctor_id"`
-	Visitreason string      `json:"visitreason"`
-	Status      string      `json:"status"`
+	StartTime   time.Time `json:"start_time"`
+	EndTime     time.Time `json:"end_time"`
+	PatientID   int64     `json:"patient_id"`
+	DoctorID    int64     `json:"doctor_id"`
+	Visitreason string    `json:"visitreason"`
+	Status      string    `json:"status"`
 }
 
 func (q *Queries) CreateAppointment(ctx context.Context, arg CreateAppointmentParams) (Appointment, error) {
@@ -79,7 +77,7 @@ SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, cre
 WHERE doctor_id = $1 order by start_time
 `
 
-func (q *Queries) ListAppointmentsDoctor(ctx context.Context, doctorID pgtype.Int8) ([]Appointment, error) {
+func (q *Queries) ListAppointmentsDoctor(ctx context.Context, doctorID int64) ([]Appointment, error) {
 	rows, err := q.db.Query(ctx, listAppointmentsDoctor, doctorID)
 	if err != nil {
 		return nil, err
@@ -114,8 +112,8 @@ WHERE doctor_id = $1 AND status=$2 order by start_time
 `
 
 type ListAppointmentsDoctorStatusParams struct {
-	DoctorID pgtype.Int8 `json:"doctor_id"`
-	Status   string      `json:"status"`
+	DoctorID int64  `json:"doctor_id"`
+	Status   string `json:"status"`
 }
 
 func (q *Queries) ListAppointmentsDoctorStatus(ctx context.Context, arg ListAppointmentsDoctorStatusParams) ([]Appointment, error) {
@@ -152,7 +150,7 @@ SELECT id, start_time, end_time, patient_id, doctor_id, visitreason, status, cre
 WHERE patient_id = $1 ORDER BY start_time
 `
 
-func (q *Queries) ListAppointmentsPatient(ctx context.Context, patientID pgtype.Int8) ([]Appointment, error) {
+func (q *Queries) ListAppointmentsPatient(ctx context.Context, patientID int64) ([]Appointment, error) {
 	rows, err := q.db.Query(ctx, listAppointmentsPatient, patientID)
 	if err != nil {
 		return nil, err
@@ -187,9 +185,9 @@ WHERE doctor_id = $1 AND status=$2 AND patient_id=$3 order by start_time
 `
 
 type ListAppointmentsPatientDoctorStatusParams struct {
-	DoctorID  pgtype.Int8 `json:"doctor_id"`
-	Status    string      `json:"status"`
-	PatientID pgtype.Int8 `json:"patient_id"`
+	DoctorID  int64  `json:"doctor_id"`
+	Status    string `json:"status"`
+	PatientID int64  `json:"patient_id"`
 }
 
 func (q *Queries) ListAppointmentsPatientDoctorStatus(ctx context.Context, arg ListAppointmentsPatientDoctorStatusParams) ([]Appointment, error) {
@@ -227,8 +225,8 @@ WHERE patient_id = $1 AND status=$2 order by start_time
 `
 
 type ListAppointmentsPatientStatusParams struct {
-	PatientID pgtype.Int8 `json:"patient_id"`
-	Status    string      `json:"status"`
+	PatientID int64  `json:"patient_id"`
+	Status    string `json:"status"`
 }
 
 func (q *Queries) ListAppointmentsPatientStatus(ctx context.Context, arg ListAppointmentsPatientStatusParams) ([]Appointment, error) {

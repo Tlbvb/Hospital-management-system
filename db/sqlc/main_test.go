@@ -10,6 +10,7 @@ import (
 )
 
 var TestQueries *Queries
+var TestStore *Store
 
 func TestMain(m *testing.M){
 	//var err error
@@ -18,5 +19,6 @@ func TestMain(m *testing.M){
 		log.Fatal("Couldn't connect to db")
 	}
 	TestQueries=New(conn)
+	TestStore=NewStore(conn)
 	os.Exit(m.Run())
 }

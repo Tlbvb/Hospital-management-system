@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Store struct{
@@ -53,11 +52,11 @@ func (store *Store) AppointmentRegistration(arg AppointmentParams) (AppointmentR
 	ctx:=context.Background()
 	var appResult AppointmentRegResult
 	err:=store.execTx(ctx,func(q *Queries) error{
-		appointment,err:=q.CreateAppointment(ctx, CreateAppointmentParams{StartTime: arg.Time,EndTime: arg.EndTime,PatientID:pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true}, DoctorID: pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true}, Visitreason: arg.Visitreason})
+		appointment,err:=q.CreateAppointment(ctx, CreateAppointmentParams{StartTime: arg.Time,EndTime: arg.EndTime,PatientID:int64(arg.Patient_id), DoctorID: int64(arg.Doctor_id), Visitreason: arg.Visitreason})
 		if err!=nil{
 			return err
 		}
-		medRecord,err:=q.CreateMedRecord(ctx, CreateMedRecordParams{PatientID: pgtype.Int8{Int64: int64(arg.Patient_id), Valid: true},DoctorID:  pgtype.Int8{Int64: int64(arg.Doctor_id), Valid: true},Diagnosis: "", Treatment:"", Notes: "",AppointmentID: pgtype.Int8{Int64: appointment.ID,Valid: true} })
+		medRecord,err:=q.CreateMedRecord(ctx, CreateMedRecordParams{PatientID:int64(arg.Patient_id),DoctorID:  int64(arg.Doctor_id),Diagnosis: "", Treatment:"", Notes: "",AppointmentID: appointment.ID })
 		if err!=nil{
 			return err
 		}
@@ -94,7 +93,7 @@ func (store *Store)UpdateMedRecordAddMedication(arg UpdateMedParams) (UpdateMedR
 		}
 		recordMedications:=make([]MedicalRecordMedication,len(arg.Medications))
 		for _,medic:=range arg.Medications{
-			medrmed,err:=queries.CreateMedRecMedic(ctx,CreateMedRecMedicParams{MedicalRecordID: pgtype.Int8{Int64: int64(arg.ID),Valid: true},MedicationID: pgtype.Int8{Int64: int64(medic.ID),Valid: true}})
+			medrmed,err:=queries.CreateMedRecMedic(ctx,CreateMedRecMedicParams{MedicalRecordID: int64(arg.ID),MedicationID: medic.ID})
 			recordMedications=append(recordMedications, medrmed)
 			return err
 		}

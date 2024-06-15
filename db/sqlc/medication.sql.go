@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createMedication = `-- name: CreateMedication :one
@@ -21,9 +19,9 @@ RETURNING id, medicationame, description, sideeffects, created_at
 `
 
 type CreateMedicationParams struct {
-	Medicationame pgtype.Text `json:"medicationame"`
-	Description   string      `json:"description"`
-	Sideeffects   string      `json:"sideeffects"`
+	Medicationame string `json:"medicationame"`
+	Description   string `json:"description"`
+	Sideeffects   string `json:"sideeffects"`
 }
 
 func (q *Queries) CreateMedication(ctx context.Context, arg CreateMedicationParams) (Medication, error) {
@@ -62,7 +60,7 @@ SELECT id, medicationame, description, sideeffects, created_at FROM "Medication"
 WHERE medicationame = $1 LIMIT 1
 `
 
-func (q *Queries) GetMedicationByName(ctx context.Context, medicationame pgtype.Text) (Medication, error) {
+func (q *Queries) GetMedicationByName(ctx context.Context, medicationame string) (Medication, error) {
 	row := q.db.QueryRow(ctx, getMedicationByName, medicationame)
 	var i Medication
 	err := row.Scan(

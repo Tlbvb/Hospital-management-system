@@ -2,8 +2,8 @@ CREATE TABLE "Appointment" (
   "id" bigserial PRIMARY KEY,
   "start_time" timestamptz NOT NULL UNIQUE,
   "end_time"  timestamptz NOT NULL UNIQUE,
-  "patient_id" bigint,
-  "doctor_id" bigint,
+  "patient_id" bigint NOT NULL,
+  "doctor_id" bigint NOT NULL,
   "visitreason" varchar NOT NULL,
   "status" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
@@ -11,9 +11,9 @@ CREATE TABLE "Appointment" (
 
 CREATE TABLE "MedicalRecord" (
   "id" bigserial PRIMARY KEY,
-  "appointment_id" bigint,
-  "patient_id" bigint,
-  "doctor_id" bigint,
+  "appointment_id" bigint NOT NULL,
+  "patient_id" bigint NOT NULL,
+  "doctor_id" bigint NOT NULL,
   "diagnosis" varchar NOT NULL,
   "treatment" varchar NOT NULL,
   "notes" varchar NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE "MedicalRecord" (
 
 CREATE TABLE "Medication" (
   "id" bigserial PRIMARY KEY,
-  "medicationame" varchar UNIQUE,
+  "medicationame" varchar UNIQUE NOT NULL,
   "description" varchar NOT NULL,
   "sideeffects" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
@@ -30,8 +30,8 @@ CREATE TABLE "Medication" (
 
 CREATE TABLE "MedicalRecordMedication" (
   "id" bigserial PRIMARY KEY,
-  "medical_record_id" bigint,
-  "medication_id" bigint,
+  "medical_record_id" bigint NOT NULL,
+  "medication_id" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE "Doctor" (
   "id" bigserial PRIMARY KEY,
   "fullname" varchar NOT NULL,
   "specialty" varchar NOT NULL,
-  "department_id" bigint,
+  "department_id" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
@@ -60,7 +60,7 @@ CREATE TABLE "Department" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "description" varchar NOT NULL,
-  "head_id" bigint ,
+  "head_id" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 

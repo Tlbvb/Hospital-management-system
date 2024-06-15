@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createDoctor = `-- name: CreateDoctor :one
@@ -21,9 +19,9 @@ RETURNING id, fullname, specialty, department_id, created_at
 `
 
 type CreateDoctorParams struct {
-	Fullname     string      `json:"fullname"`
-	Specialty    string      `json:"specialty"`
-	DepartmentID pgtype.Int8 `json:"department_id"`
+	Fullname     string `json:"fullname"`
+	Specialty    string `json:"specialty"`
+	DepartmentID int64  `json:"department_id"`
 }
 
 func (q *Queries) CreateDoctor(ctx context.Context, arg CreateDoctorParams) (Doctor, error) {
@@ -80,7 +78,7 @@ SELECT id, fullname, specialty, department_id, created_at FROM "Doctor"
 WHERE department_id = $1
 `
 
-func (q *Queries) GetDoctorsOfDepartment(ctx context.Context, departmentID pgtype.Int8) ([]Doctor, error) {
+func (q *Queries) GetDoctorsOfDepartment(ctx context.Context, departmentID int64) ([]Doctor, error) {
 	rows, err := q.db.Query(ctx, getDoctorsOfDepartment, departmentID)
 	if err != nil {
 		return nil, err
