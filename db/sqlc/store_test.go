@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -30,6 +31,6 @@ func TestAppointmentReg(t *testing.T){
 	require.WithinDuration(t, params.Time, res.Appointment.StartTime, time.Millisecond,"Start time mismatch")
 	require.WithinDuration(t, params.EndTime, res.Appointment.EndTime,time.Millisecond ,"End time mismatch")
 
-	
+	fmt.Println("HELLO")
 
 }
